@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{BrockwellDavis}
+Peter~J. Brockwell and Richard~A. Davis.
+\newblock {\em Time series: theory and methods. 2nd ed.}
+\newblock Springer-Verlag, 1991.
+
+\bibitem{Johansen88}
+S{\o}ren Johansen.
+\newblock Statistical analysis of cointegration vectors.
+\newblock {\em J. Econ. Dyn. Control}, 12(2-3):231--254, 1988.
+
+\bibitem{Johansen91}
+S{\o}ren Johansen.
+\newblock Estimation and hypothesis testing of cointegration vectors in
+  gaussian vector autoregressive models.
+\newblock {\em Econometrica}, 59(6):1551--1580, 1991.
+
+\bibitem{Lutkepohl}
+Helmut Lütkepohl.
+\newblock {\em New introduction to multiple time series analysis}.
+\newblock Springer-Verlag, 2006.
+
+\end{thebibliography}

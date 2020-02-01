@@ -1,0 +1,660 @@
+\documentclass[12pt, leqno]{article}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphics}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{sectsty}
+\usepackage{titlesec}
+\usepackage[T1]{fontenc}
+\usepackage{ae}
+\usepackage{aecompl}
+\usepackage{moreverb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{eurosym}
+
+\usepackage[colorlinks=true,%
+linkcolor=blue,%
+urlcolor=red,%
+hyperindex,%
+bookmarks,%
+dvipdfm,%
+pdftitle={Cointegration Primer},%
+pdfauthor={J.-O. Moussafir},%
+pdfcreator={LaTeX},%
+pdfstartview=FitH,%
+pdffitwindow=true,%
+pdfpagemode=UseOutlines,% UseOutlines, FullScreen, None or UseThumbs
+]{hyperref}
+
+
+\newcommand{\with}{\ \text{with} \ }
+\newcommand{\tq}{\ \text{t.q.} \ }
+
+\renewcommand{\bar}{\overline}
+\renewcommand{\vector}{\overrightarrow}
+\renewcommand{\mod}{\, \text{mod} \,}
+
+\newcommand{\imply}{\Longrightarrow}
+
+\newcommand{\intt}[1]{\text{\rm Int}(#1)}
+\newcommand{\adh}[1]{\text{\rm Adh}(#1)}
+\newcommand{\bord}[1]{\partial #1}
+\newcommand{\id}{\text{\rm I}}
+\newcommand{\dist}[1]{\text{\rm dist}(#1)}
+\newcommand{\rank}{\text{\rm rank}}
+\newcommand{\norm}[1]{|| #1 ||}
+\newcommand{\ps}[1]{\langle #1 \rangle}
+\newcommand{\tr}{\text{\rm Tr}\,}
+\newcommand{\rk}{\text{\rm rank}\,}
+
+\renewcommand{\det}[1]{|#1|}
+\newcommand{\diff}{\text{\rm d}}
+\newcommand{\vol}{\lambda}
+
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\rational}{\mathbb{Q}}
+\newcommand{\integer}{\mathbb{Z}} 
+
+\newcommand{\aut}[1]{\text{Aut}(#1)}
+\newcommand{\mat}[3]{{\mathcal M}_{#1,#2} (#3)}
+\newcommand{\GL}[2]{\text{\it GL}_{#1} (#2)}
+\renewcommand{\O}[2]{\text{\it O}_{#1} (#2)}
+\newcommand{\SO}[2]{\text{\it SO}_{#1} (#2)}
+\newcommand{\AR}[1]{\text{AR}(#1)}
+\newcommand{\VAR}[1]{\text{VAR}(#1)}
+
+\newcommand{\esp}[1]{\mathbb{E}[\,#1\,]}
+
+%% Section
+\titleformat{\section}{}{\bf \thesection.}{0.3em}{\bfseries}
+\titlespacing{\section}{0cm}{1.cm}{0.4cm}
+
+% Figures
+\makeatletter
+\@addtoreset{figure}{section}
+\makeatother
+\renewcommand{\thefigure}{\arabic{figure}}
+
+% Environnements
+\newcounter{defn}
+\renewcommand{\thedefn}{\arabic{defn}}
+\newenvironment{defn}[0]% 
+{\refstepcounter{defn}\vspace{10pt}\par\noindent 
+{\bf Definition \thedefn.} 
+\begin{itshape}}% 
+{\end{itshape}\par\vspace{0.2cm}}
+
+\newcounter{prop}
+\renewcommand{\theprop}{\arabic{prop}}
+\newenvironment{prop}[0]% 
+{\refstepcounter{prop}\vspace{10pt}\par\noindent 
+{\bf Proposition \theprop.}
+\begin{itshape}}% 
+{\end{itshape}\par\vspace{0.2cm}}
+
+\newcounter{theo}
+\renewcommand{\thetheo}{\arabic{theo}}
+\newenvironment{theo}[0]% 
+{\refstepcounter{theo}\vspace{10pt}\par\noindent 
+{\bf Theorem \thetheo.}
+\begin{itshape}}% 
+{\end{itshape}\par\vspace{0.2cm}} 
+
+\newcounter{ex}
+\renewcommand{\theex}{\arabic{ex}}
+\newenvironment{ex}[0]% 
+{\refstepcounter{ex}\vspace{10pt}\par\noindent 
+{\bf Exemple \theex.}}% 
+{\par\vspace{0.2cm}} 
+
+\newcounter{rem}
+\renewcommand{\therem}{\arabic{rem}}
+\newenvironment{rem}[0]% 
+{\refstepcounter{rem}\vspace{10pt}\par\noindent 
+{\bf Remark \therem.}}% 
+{\par\vspace{0.2cm}} 
+
+\newcounter{prob}
+\renewcommand{\theprob}{\arabic{prob}}
+\newenvironment{prob}[0]% 
+{\refstepcounter{prob}\vspace{10pt}\par\noindent 
+{\bf Problem \theprob.}
+\begin{itshape}}% 
+{\end{itshape}\par\vspace{0.2cm}}
+
+\newenvironment{proof}{\noindent {\em Proof. }}%
+{$\square$ \par \vspace{10pt} \noindent}
+
+\newenvironment{skproof}{\noindent {\em Sketch of proof. }}%
+{$\square$ \par \vspace{10pt} \noindent}
+
+%% Informations sur le document, l'auteur, etc.
+
+\begin{document}
+
+\begin{center}
+\noindent
+{\Large Cointegration Primer} \\
+
+\vspace{0.2cm}
+{Jacques-Olivier Moussafir}\\
+
+\vspace{0.2cm}
+{May 11th, 2009}
+
+\end{center}
+
+\section{Introduction}
+Roughly speaking, two random processes $x_t$ and $y_t$ are cointegrated when 
+some linear combination of them is stationary. One easily constructs examples 
+of such processes, and there are many multi-dimensional financial time series 
+that match more or less that definition. The purpose of this document is to
+describe precisely all of it in the simplest possible case. There are some 
+technical details usually not covered in textbooks and papers and that 
+are included here. Section \ref{sec LS} reviews some basic results about 
+multi-dimensional least squares. Section \ref{sec RRR} describes the reduced
+rank regression which is the technical central component of cointegration
+estimation. Section \ref{sec VECM} introduces the VAR and VECM models, 
+explains why these models can be used to model cointegrated financial time-series,
+and explain precisely the estimation process.
+
+
+\section{Least Squares}
+\label{sec LS}
+In ordinary least squares, one considers $n+1$ observed time series: $y_t$, $x_t^1$,
+\ldots, $x_t^n$, with $t=1,\ldots, T$, and one looks for $n$ coefficients
+$\beta_1$, \ldots, $\beta_n$ that solve
+$$
+\min_\beta \sum_t \norm{y_t - \beta' x_t}^2
+$$
+with obvious notations. One doesn't need any underlying probabilistic context.
+The natural extension of this problem to multi-dimensional time series works like this:
+let $y_t \in \real^p$ and $x_t \in \real^q$ be two multi-dimensional time series, solve
+$$
+\min_A \sum_t \norm{y_t - A x_t}^2
+$$
+where $A$ is a matrix of size $p\times q$. This problem has many equivalent forms, 
+for instance if $X$ denotes the $q \times T$ matrix whose columns are $x_t$ 
+and $Y$, the $p\times T$ matrix whose columns are $y_t$, then the least square
+problem becomes
+\begin{equation}
+\label{eq LS-Tr}
+\min_A \tr (Y - A X)' (Y - A X),
+\end{equation}
+where $\tr$ denotes the trace operator, and $X'$ is $X$ transposed.
+
+\begin{prop}
+Let $y_t$, $x_t$, $t=1,\ldots T$ be two $p$-dimensional time series, and
+let $X$ and $Y$ denote the $p\times T$ matrices whose columns are 
+$x_t$ and $y$. If $(X X')$ is invertible, the solution of problem (\ref{eq LS-Tr})
+is
+$$
+A^* = (Y X')(X X')^{-1}.
+$$
+\end{prop}
+This is straightforward: the minimization of convex quadratic problems
+is easily solved analytically using first order conditions. There is another 
+way to set the least squares problem. Assume for instance that $p=2$.
+The matrices $X$ and $Y$ correspond to two sets of $T$ points in $\real^2$, 
+and the least square problem looks for the linear transformation that approximately
+maps $x_t$ to $y_t$. It is natural to consider residuals
+$$
+\epsilon_t = y_t - A x_t.
+$$
+A good matrix $A$ would lead to small $\epsilon_t$ and one may look at 
+the empirical covariance $\Sigma$ of these residuals or its eigenvalues since
+small residuals correspond to small eigenvalues.
+One could for instance want to minimize the determinant of $\Sigma$.
+The least square problem should therefore be equivalent to 
+\begin{equation}
+\label{eq LS-Det}
+\min_A \det{(Y - A X) (Y - A X)'}.
+\end{equation}
+This happens to be the case.
+\begin{prop}
+Let $y_t \in \real^p$, $x_t \in \real^q$, $t=1,\ldots T$ be two multi-dimensional time series, and
+let $X$ and $Y$ denote the matrices whose columns are 
+$x_t$ and $y$. Let
+$$
+f(A) = \det{(Y - AX) (Y-AX)'}.
+$$
+If $(X X')$ is invertible, and $f(A)>0$ for all $A$,
+then problems (\ref{eq LS-Tr}) and (\ref{eq LS-Det}) have the same solution.
+\end{prop}
+\begin{proof}
+Let $H$ be an arbitrary $p\times q$ matrix,
+{\footnotesize
+\begin{align*}
+f(A+H)  & = f(A) \, \det{\left( A X X' H' + H X X' A' - Y X' H' - H X Y' + H X X' H'\right)} \\[0.2cm]
+        & = f(A) + f(A) \, \tr \left( \alpha(A)^{-1} \left( (AX - Y)X' H' + H X (X'A' - Y') \right) \right) + o(H) 
+\end{align*}
+}
+where $\alpha(A) = (Y - AX) (Y-AX)'$. Hence
+$$
+\diff f_A(H) = \tr \left( \alpha(A)^{-1} ( (AX - Y)X' H' + H X (X'A' - Y')) \right).
+$$
+If A is a critical point for $f$, then $\diff f_A = 0$ and for every $H$, and
+$$
+\tr \alpha(A)^{-1} (\Gamma' H' + H \Gamma) = 0,
+$$
+where $\Gamma = X(X'A' - Y')$, hence $\Gamma = 0$ and $A = (YX')(XX')^{-1}$.
+The reader should check that the critical point is a a global minimum.
+\end{proof}
+
+\begin{rem} Usually the dimension $p$ is much smaller than $T$ and 
+the technical conditions of this proposition are met: if $XX'$ was not invertible,
+then all $x_t$ would lie in a hyperplane which would be surprising. 
+Similarly if $(Y - AX) (Y-AX)'$ were degenerate, all residuals would lie in a hyperplane. 
+Actually, the invertibility condition for $X X'$ seems mandatory: without it
+we'd had to solve a degenerate problem. However, unfortunately, this kind of degeneracy
+is exactly what we'll meet in the following sections. 
+\end{rem}
+
+\section{Reduced Rank Regression}
+\label{sec RRR}
+The reduced rank regression is one of the main technical components for the estimation
+of cointegration relations. 
+We'll see how it appears in the cointegration framework.
+The reduced rank regression deals with least square when the dimension of $y_t$ and $x_t$ are different, 
+or when one wants to force some degeneracy in the linear dependence between $x_t$ and $y_t$.
+
+Let $x_t$, $y_t$, $t=1,\ldots, T$ be two time series, $x_t \in \real^p$ and $y_t \in \real^q$.
+Here is the reduced rank regression problem statement:
+$$
+\min_{\Pi,\ \rank \Pi=r} \det{\sum_t y_t - \Pi x_t}
+$$
+or equivalently
+\begin{equation}
+\label{eq RRR}
+\min_{\Pi,\ \rank \Pi=r} \det{(Y - \Pi X) (Y - \Pi X)'}
+\end{equation}
+using notations introduced in previous section. Any $q\times p$ matrix $\Pi$
+of rank $r$ may be written
+$$
+\Pi = \alpha \beta'
+$$
+where $\alpha$ is a $q \times r$ matrix and $\beta$ a $r \times p$ matrix.
+Solving problem (\ref{eq RRR}) requires a couple of propositions.
+
+\begin{prop}
+Let $Q$ be a $p \times p$ symmetric positive matrix, and let 
+$$
+\varphi(x) = \frac{\det{x' Q x}}{\det{x' x}}. 
+$$
+where $x$ is a $p \times r$ matrix. Let $v_1, \ldots, v_p$, $\lambda_1\geq \ldots \geq \lambda_p$
+denote the eigenvectors and eigenvalues of $Q$, and let $x_*$ and $x^*$ denote the $p\times r$
+matrices 
+$$
+x^* = \left( v_1,\ldots, v_r \right), \ x_* = \left( v_{p-r+1}, \ldots, v_p \right).
+$$
+Then
+$$
+\varphi(x_*) \leq \varphi(x) \leq \varphi (x^*)
+$$
+and
+$$
+\varphi(x_*) = \Pi_{i=p-r+1}^p \lambda_i, \ \varphi(x^*) = \Pi_{i=1}^r \lambda_i. 
+$$
+\end{prop}
+\begin{skproof}
+This result has a very simple and nice geometric interpretation. We only give it 
+an leave some work to the reader. First, remark that if $Q$ is the matrix 
+of a quadratic form $q$ in the usual basis of $\real^p$, and $x$ denotes another 
+basis of $\real^p$, the matrix of $q$ with respect to $x$ is $x'Qx$. 
+This result extends to the case where $x=(x_1,\ldots, x_r)$ spans a sub-vector space
+of dimension $r$. Second, recall
+that the determinant of a symmetric matrix is the product of its eigenvalues. Finally, 
+recall the simple relation between eigenvalues of a positive symmetric matrix,
+and the shape of the ellipsoid $\mathcal E$ defined by $u'Qu=1$, where here $u\in \real^p$: 
+$\mathcal E$ has $p$ symmetry axis and the intersection of $\mathcal E$ 
+with them defines $p$ segments whose lengths are $2/\sqrt{\lambda_1}$,
+\ldots, $2/\sqrt{\lambda_p}$. We call them the lengths of the ellipsoid axis.
+
+The maximization of $\varphi$ therefore corresponds to search of a sub-vector
+space of dimension $r$ whose intersection with $\mathcal E$ gives an ellipsoid $\mathcal E'$
+whose axis are as short as possible. More precisely we want the product of these lengths to be
+as small as possible. Similarly, the minimization of $\varphi$ corresponds to searching 
+a sub-vector space of dimension $r$ whose axis are as large as possible.
+
+Solving this is therefore straightforward: for the maximization, pick the $r$ eigenvectors
+of $Q$ corresponding to the $r$ largest eigenvalues values (and smallest symmetry axis), and for 
+the minimization, pick the $r$ eigenvectors of the $r$ smallest eigenvalues.
+\end{skproof}
+
+\begin{rem}
+This proposition gives a global maximum and a global minimum for $\varphi$.
+The proof suggests that they need not be unique: all basis of the same
+sub-vector space should lead to the same value for $\varphi$. Hence argmin and argmax
+for $\varphi$ are defined up to a change of basis. 
+This remark also applies to the next proposition.
+\end{rem}
+The following proposition is a simple consequence of the previous one.
+\begin{prop}
+\label{prop Poincare}
+Let $M$ be a $p \times p$ symmetric positive matrix, and let $N$ be a $p\times p$
+symmetric positive definite matrix. Let 
+$$
+\varphi(x) = \frac{\det{x' M x}}{\det{x' N x}},
+$$
+where $x$ is a $p \times r$ matrix. 
+Let $v_1, \ldots, v_p$, $\lambda_1\geq \ldots \geq \lambda_p$
+denote the eigenvectors and eigenvalues of $N^{-1/2} M N^{-1/2}$, and let $x_*$ and $x^*$ denote the $p\times r$
+matrices 
+$$
+x^* = N^{-1/2} \left( v_1,\ldots, v_r \right), \ x_* = N^{-1/2} \left( v_{p-r+1}, \ldots, v_p \right).
+$$
+Then
+$$
+\varphi(x_*) \leq \varphi(x) \leq \varphi (x^*)
+$$
+and
+$$
+\varphi(x_*) = \Pi_{i=p-r+1}^p \lambda_i, \ \varphi(x^*) = \Pi_{i=1}^r \lambda_i. 
+$$
+\end{prop}
+The resolution of problem (\ref{eq RRR}) works like this. First we write 
+the matrix of rank $r$, $\Pi$ as 
+$$
+\Pi = \alpha \beta'.
+$$ 
+Problem (\ref{eq RRR}) becomes
+\begin{equation}
+\label{eq RRRab}
+\min_{\alpha, \beta} \det{(Y - \alpha \beta' X) (Y - \alpha \beta' X)'}.
+\end{equation} 
+We first fix $\beta$ and use least square to get $\alpha$ as a function of $\beta$.
+Then we solve 
+$$
+\min_{\beta} \det{(Y - \alpha(\beta) \beta' X) (Y - \alpha(\beta) \beta' X)'}
+$$
+using previous propositions and get $\beta$. This algorithms relies on 
+$$
+\min_\beta \min_\alpha \det{(Y - \alpha \beta' X) (Y - \alpha \beta' X)'} = 
+\min_{\alpha, \beta} \det{(Y - \alpha \beta' X) (Y - \alpha \beta' X)'}, 
+$$
+which happens to be true.
+
+\begin{prop}
+Let $y_t$, $x_t$, $t=1,\ldots T$ be two $p$-dimensional time series, and
+let $X$ and $Y$ denote the $p\times T$ matrices whose columns are 
+$x_t$ and $y$. If $X X'$ and $Y Y'$ are invertible, the solutions of 
+$$
+\min_{\alpha, \beta} \det{(Y - \alpha \beta' X) (Y - \alpha \beta' X)'}
+$$
+are given by 
+\begin{align*}
+\beta^* & = (X X')^{-1/2} \left( v_{p-r+1},\ldots,v_p \right) \phi \\[0.2cm]
+\alpha^* & = Y X' \beta \left( \beta' X X' \beta \right) \\
+\end{align*}
+where $v_1,\ldots, v_p$ and $\lambda_1 \geq \ldots \geq \lambda_r$ are
+the eigenvectors and eigenvalues of
+$$
+Q = \id - (X X')^{-1/2} X Y' (Y Y')^{-1} Y X' (X X')^{-1/2},
+$$
+$\phi$ is any invertible $r\times r$ matrix, and $\id$ the identity matrix.
+\end{prop}
+\begin{proof}
+First remark that if $X X'$ is invertible and $\beta$ has full rank, then
+$\beta' X X' \beta$ is also invertible. We first perform the optimization 
+for full rank $\beta$.
+
+For full rank fixed $\beta$, least squares give the solution of
+$$
+\min_\alpha \det{(Y - \alpha \beta' X) (Y - \alpha \beta' X)'},
+$$
+$$
+\alpha^* = Y X' \beta (\beta' X X' \beta)^{-1}.
+$$
+Minimizing with respect to $\beta$ leads to 
+$$
+\min_{\beta} \det{Y Y' - Y X' \beta (\beta' X X' \beta)^{-1} \beta' X Y'}.
+$$
+Remark that for any square matrix of same size, $A,B,C,D$, with $A$ and $C$ invertible,
+$$
+\det {A} \det{C - D A^{-1} B} = \det {C} \det{A - B C^{-1} D}.
+$$
+This identity gives
+$$
+\det{Y Y' - Y X' \beta (\beta' X X' \beta)^{-1} \beta' X Y'} = 
+\det{Y Y'} \frac{\det{\beta' (X X' - X Y' (Y Y')^{-1} Y X') \beta}}{\det{\beta' X X' \beta}},
+$$
+and using invertibility of $Y Y'$ we are left with 
+$$
+\min_{\beta} \frac{\det{\beta' (X X' - X Y' (Y Y')^{-1} Y X') \beta}}{\det{\beta' X X' \beta}},
+$$
+which corresponds exactly to the problem solved in proposition \ref{prop Poincare}.
+Finally, let 
+$$
+\varphi(\alpha, \beta) = \det{(Y - \alpha \beta' X) (Y - \alpha \beta' X)'}.
+$$
+One checks easily that 
+$$
+\min_{\alpha, \beta} \varphi(\alpha, \beta) \leq \min_{\alpha, \beta, \rk \beta <r } \varphi(\alpha, \beta),
+$$
+which ensures that the assumption we made about the rank of 
+$\beta$ is actually harmless.
+\end{proof}
+
+\section{Cointegrated VAR and VECM}
+\label{sec VECM}
+VAR processes stands for vector auto regressive process. They extend naturally the usual auto-regressive
+process. A fair introduction can be found in \cite{Lutkepohl}.
+The basic definitions are directly inspired by the one dimensional case. We quote them here.
+\begin{defn}
+A $\VAR{k}$ process $y_t$ is a multi-dimensional random process that satisfies
+$$
+y_t = A_1 y_{t-1} + \cdots + A_k y_{t-k} + u_t,\ \text{for} \ t \ \in \integer
+$$
+where $u_t$ is a second order white noise, i.e. a process with moments of order $2$ such that
+$\esp{u_t} = 0$, $\esp{u_t u_{t+h}'}=0$ for $h\neq 0$.
+A $\VAR{k}$ process is said to be stationary if $\esp{y_t}$ and $\esp{y_t \ y_{t+h}'}$ do not
+depend on $t$. It is said to be stable if the roots of
+$$
+\det{\id - A_1 z - \cdots A_k z^k} 
+$$
+lie outside of the unit circle.
+\end{defn}
+
+\begin{defn}
+A random multivariate process $y_t\in \real^p$ is said to be cointegrated of order $r$, $1 \leq r \leq p$
+when $r$ independent linear combinations of $y_t^i$ are stationary.
+The process $y_t$ is said to be cointegrated if it is cointegrated of order $r$ for some $r$, $1 \leq r \leq p$.
+\end{defn}
+
+The processes we're interested in have the following properties: they are not stationary, 
+cointegrated, and become stationary after differentiation. If we also assume that they 
+are $\VAR{1}$, which is quite general, we get a model for the ($\log$-) prices we want to model.
+
+If $y_t$ is a $p$-dimensional $\VAR{1}$ and $\Delta y_t$ stationnary, then
+$$
+\Delta y_t = (A - I) y_{t-1} + \epsilon_t
+$$
+and 
+$$
+(A - I) y_t
+$$ 
+must be stationnary. Two possibilities occur: if $A=I$, then $y_t$ is a random walk. If 
+$A\neq I$, its rank cannot be full, and 
+$$
+A - I = \alpha \beta'
+$$
+where $\alpha$ and $\beta$ have dimensions $p\times r$ with $r \leq p-1$.
+
+Multi-variate processes that satisfy such a a relation are called Vector Error Correction Models (VECM). 
+Because of last proposition we get that any price process that is mild enough to fit into a $\VAR{1}$ 
+and exhibits cointegration relations can be modeled as a VECM. 
+Moreover the $\beta$ that appears in the VECM model contains the cointegration relations.
+
+The methods presented in section \ref{sec RRR} are obviously useful 
+for the estimation of VECM models.
+\begin{prop}
+Let $y_1$, \ldots $y_T$ be the sample of a $p$-dimensional VECM
+$$
+\Delta y_t = \alpha \beta ' y_{t-1} + u_t.
+$$
+where $\alpha$, $\beta$ denote two $p \times r$ matrices and $u_t$ a white noise.
+Let $\Delta Y$ and $Y$ denote the $p\times T$ matrices whose columns are 
+$\Delta y_{t-1}$ and $y_t$. The maximum likelihood estimators of $\alpha$ 
+and $\beta$ are
+\begin{align*}
+\beta^* & = \left( v_{p-r+1},\ldots,v_p \right) \phi \\[0.2cm]
+\alpha^* & = \Delta Y Y' \beta \left( \beta' Y Y' \beta \right) \\
+\end{align*}
+where $v_1,\ldots, v_p$ and $\lambda_1 \geq \ldots \geq \lambda_r$ are
+the eigenvectors and eigenvalues of .
+$$
+Q = \id - Y \Delta Y' (\Delta Y \Delta Y')^{-1} \Delta Y Y' (Y Y')^{-1},
+$$
+$\phi$ is any invertible $r\times r$ matrix, and $\id$ the identity matrix.
+\end{prop}
+
+There is also a least square estimator of VECM, that results from the direct application 
+of formula given in \ref{sec LS}, using notations of previous property
+$$
+\alpha \beta' = \Delta Y Y' (Y Y')^{-1}
+$$
+This method has an apparent default since it uses least squares for non-stationary data. 
+However one can prove, see \cite{Lutkepohl} that the resulting estimators are consistent.
+There are two other advantages for the likelihood estimators. First they directly
+give access to $\alpha$ and $\beta'$. Second they allow the development of an estimation
+framework where one can also estimate likelihood ratio, and compare the hypothesis
+$\rk A = r_0$ with the hypothesis $\rk A = r_0+1$ for instance. 
+
+
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{cointegration}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+\section{Conclusions}
+\label{sec C}
+
+\subsection{Spoon}
+The cointegration framework presented here applies directly to Spoon: let 
+$x^i_t$, $i=1,\ldots,p$, $t=1,\ldots, T$ 
+denote the time series of close prices for a set of stocks, for instance 
+an industrial sector.
+Spoon invests in the portfolio
+\begin{equation}
+w_t = - \lambda \ \Gamma_t x_t,
+\end{equation}
+where $\lambda$ is a positive constant and
+$$
+\Gamma_t = \frac{1}{h} \left( \ x'_{t-h, t-1} \ x_{t-h, t-1} \right)^{-1}
+$$
+where $h$ defines the number of days used to fit the model, for instance $h=250$, 
+and $x_{t-h,t-1}$ denotes the $p \times h$ matrix whose columns are $x_s$ for
+$s=t-h,\ldots, t-1$.
+
+This strategy makes a bet about the cointegration of the multi-dimensional
+process $x_t$: it assumes that if $x_t$ was a $\VAR{1}$ there would be 
+$p-1$ independent relations which implicitly says that the prices $x_t$ 
+(of the industrial sector) are driven by exactly one hidden factor.
+
+This is clearly not the lightest assumption we can make. 
+If instead we assume the existence of exactly one relation, i.e. the existence
+of one $\beta$ such that $\beta' x_t$ is stationary, we are left with 
+a strategy that invests at time $t$
+$$
+w_t = -\lambda \beta' x_t \ \beta,
+$$
+where $\beta$ is a positive constant. That strategy makes an assumption 
+about the mean reverting behaviour of the spread
+$$
+s_t = \beta' x_t.
+$$
+This would also lead to the possible use of filters: the stationarity of $s_t$
+can be measured using for instance unit-root tests, and sectors whose
+spread  are not stationary would be rejected.
+Besides, we might use levels on $s_t$ to enter a position or close it.
+Finally, looking at the value of $\beta_i$, we might decide not to use 
+the stocks whose weights are close to $0$.
+
+One important remark about the Johansen framework: it produces a set
+of cointegration relations $\beta_1$, $\beta_2$, etc. There is no 
+clear indication that $\beta_1' x_t$ is more {\em stationary} than
+$\beta_2' x_t$. All we know is that
+$$
+\min_{\alpha \in \real^p} \Delta x_t - \alpha \beta_1' x_{t-1} \leq
+\min_{\alpha \in \real^p} \Delta x_t - \alpha \beta_2' x_{t-1}.
+$$
+
+Hence, one might instead want to look for the most {\em stationary} linear combination,
+and set the problem as follows: let $s_t = \beta' x_t$, if we model $s_t$ as an
+$\AR{1}$ process, 
+$$
+s_t = \phi s_{t-1} + \epsilon_t,
+$$
+where $\epsilon_t$ denotes the white noise, small $|\phi|$ correspond to 
+processes that look mean-reverting (they come back quickly to $0$), and $\phi$
+close to $1$ give processes that hardly seem to come back to $0$.
+The least square estimates of $\phi$ is 
+$$
+\frac{\sum_t s_t s_{t-1}}{\sum_t s_t s_t},
+$$
+hence we might want to solve
+$$
+\min_\beta \frac{\sum_t \beta' x_t x_{t-1}' \beta}{\sum_t \beta' x_t x_t' \beta}.
+$$
+Let $X_{t_1, t_2}$ denote the $p \times (t_2 - t_1 + 1)$ matrix whose columns
+are $x_t$, $t_1 \leq  t \leq t_2$.
+Our problem becomes
+\begin{equation}
+\min_\beta \frac{\beta' X_{2,T} X_{1,T-1}' \beta}{\beta' X_{2,T} X_{2,T}' \beta},
+\end{equation}
+and is similar to the problems solved in section \ref{sec RRR}.
+This method will probably lead to $\beta$ that show that some stocks should be removed 
+from industrial sectors.
+
+We may also want to use a $\beta$ that maximizes the standard deviation of
+$\beta' x_t$, for fixed investment. This leads to
+\begin{equation}
+\max_\beta \frac{\beta' X_{2,T} X_{2,T}' \beta}{\sum_i |\beta_i| x_T^i}.
+\end{equation}
+
+
+
+
+\subsection{Cointegrated clusters}
+Let us assume that we work with many assets, say $p=1000$ for instance. 
+Assume we included many future indices and the corresponding stocks, several 
+related interest rates, commodity futures, etc. The problem is now
+to try to detect cointegration relations. If the number of 
+observations $T$, is not much larger than $p$, or even smaller than $p$,
+the cointegration problem cannot be solved directly  using the techniques 
+of previous sections: the matrices $\Delta Y \Delta Y'$ and $Y Y'$ might
+not be invertible.
+Even if $p<T$ we still have a problem: assume that our data set includes
+to two future indices and the corresponding stocks. 
+In that case the cointegration rank is $2$ at least. 
+If we look for two cointegration relations, we end up with a two-dimensional
+vector space, but we wont necessarily recover the indices weights.
+
+Let us also mention that the procedure described in \cite{Johansen88}
+and \cite{Lutkepohl} makes it possible to include drift in the $\VAR{1}$ 
+model, and to detect the cointegration in the Gaussian case using likelihood ratios.
+
+There is an {\tt R} package {\tt urca} that implements all this including the computation 
+of likelihood ratios, but using direct formulas is pobably simpler.
+There is also an independent software: {\tt JMulTi}, that performs this analysis.
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{cointegration}
+
+\end{document}
+
