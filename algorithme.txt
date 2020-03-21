@@ -1,0 +1,61 @@
+
+Chere Elena,
+
+le programme de calcul des voiles en dimension 3 fonctionne.
+Pour l'instant ce n'est qu'une heuristique. 
+
+Avant de vous dire commemt il marche, il faut que je vous soumette un petit probleme d'algorithmique assez 
+important du point de vue de la rapidite d'execution du programme.
+
+On considere S = (O, A, B, C) un simplexe a sommets entiers. A quelle condition sur les coordonnees de A, B 
+et C, S intersection Z^3 est-elle contenue dans {O} union triangle (A,B,C)? Autrement dit, a quelle 
+condition les points entiers de S differents de O sont-ils contenus dans la face (A,B,C)?
+La solution que j'ai trouvee pour resoudre ce probleme la suivante : on commence par transformer S en un 
+simplexe equivalent (action a gauche de GL(3, Z) et translations entieres), tel que A,B et C soient dans le 
+plan z=0, et O sur l'axe (Oz). Le point O a alors pour coordonnees (0,0,d) ou d est la distance entiere de 
+O a la face A,B,C. On considere un point M entier compris entre les plans z=1 et z = d-1. La droite (OM) 
+coupe le plan z=0 en un point Ps(M). Si le simplexe S est du type requis (points entiers sur la face ABC), 
+les points Ps(M) sont tous en dehors du triangle (ABC). On determine l'image par Ps de tous points entiers 
+des plans z=1, z=2, ... z=d-1, et on regarde si l'une de ces images est dans le triangle (ABC). En fait, 
+come les points Ps(M) sont rationnels en general et non pas entiers, on applique une homothetie (dans le 
+plan z=0) de rapport convenable pour n'avoir a manipuler que des entiers. Le rapport de l'homothetie est 
+pour cet algorithme de l'ordre de d!. Il a donc fallu le modifier un peu, et examiner separement les images 
+de Ps(M) pour M appartenant au plan z = 1, puis z = 2, ... et z=d-1 (les rapports des homotheties sont 
+alors de l'ordre de d).
+
+Cet algorithme donne un resultat correct, mais il est deseperement lent. Pour l'instant, il faut dix 
+minutes environ pour fabriquer une voile de petite taille (coordonnes des ci de quelques dixaines). Mes 
+outils de developpement me disent que l'essentiel du temps de calcul est consacre a l'algorithme dont je 
+viens de vous parler.
+
+Malgre tout je peux vous envoyer la version provisoir du programme (ANSI C), en esperant que la compilation 
+ne vous posera pas trop de problemes (et qu'il n'y a pas trop d'erreurs).
+
+Voici donc l'idee de l'algorithme :
+
+1. On determine dans chaque octant les points les plus proches de l'origine (points minimaux). Ces points 
+sont sur les voiles - mais pas necessairement extremaux.
+
+2. A partir d'un de ces points x on cherche a et b dans les autres quadrants (parmi les points de la voile 
+deja calcules) tels que x+<a,b>, le plan affine passant par x dirige par a et b soit un plan d'appui d'une 
+face de la voile. Quand on a trouve a et b, on calcule la face de la voile.
+On repete cette operation jusqu'a ce qu'on ait obtenu au moins une face dans chaque quadrant. 
+
+3. On calcule le bord de la voile dans chaque quadrant, et a partir de chaque arete du bord on cherche une 
+direction qui permette de creer une face. Ces directions sont a chercher parmi les points des voiles des 
+autres quadrants, mais aussi parmi les aretes du bord de la voile qu'on est en train de construire. Quand 
+on a trouve une telle direction on calcule la face. On repete cette operation j'usqu'a ce qu'il n'y ait 
+plus rien a ajouter. 
+
+Les dessins produits avec Mathematica disent que l'algorithme fonctionne. En gros l'algorithme determine un 
+point de depart et une regle de propagation. On montre assez facilement que tout ce qui est calcule fait 
+partie de la voile, mais rien ne dit qu'on obtienne tout. C'est pourtant ce qui arrive. Il y donc quelque 
+chose a demonter qui n'a pas du tout l'air facile....
+
+
+Il me faut ajouter que j'ai commis une erreur dans la demonstration que je vous ai envoyee :
+j'introduis v(x) = <w1, x> + <w2,x> + <w3,x>. Il faut en fait poser
+v(x) = d/D(<w1, x> + <w2,x> + <w3,x>) ou D = det(x1, x2, x3) et d est la distane entiere entre O et la face 
+(x1, x2, x3).
+
+Amicalement

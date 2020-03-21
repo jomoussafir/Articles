@@ -1,0 +1,70 @@
+\begin{thebibliography}{10}
+
+\bibitem{ArAv}
+V.I. Arnol'd and A.~Avez.
+\newblock {\em Problèmes ergodiques de la mécanique classique}.
+\newblock Gauthier-Villars, 1967.
+
+\bibitem{BH}
+M.~Bestvina and M.~Handel.
+\newblock Train-tracks for surface homeomorphisms.
+\newblock {\em Topology}, 34(1):109--140, 1995.
+
+\bibitem{Birman}
+J.~Birman.
+\newblock {\em Braids, links, and mapping class groups}.
+\newblock {Annals of Mathematics Studies.} {Princeton University Press and
+  University of Tokyo Press.}, 1975.
+
+\bibitem{Boyland}
+P.~Boyland.
+\newblock Topological methods in surface dynamics.
+\newblock {\em Topology Appl.}, 58(3):223--298, 1994.
+
+\bibitem{Boyland_Aref_Stremler}
+P.~Boyland, H.~Aref, and M.~Stremler.
+\newblock Topological fluid mechanics of stirring.
+\newblock {\em J. Fluid Mech.}, 403:277--304, 2000.
+
+\bibitem{YB}
+I.A. Dynnikov.
+\newblock {On a Yang-Baxter mapping and the Dehornoy ordering.}
+\newblock {\em Russ. Math. Surv.}, 57(3):592--594, 2002.
+
+\bibitem{CB}
+I.A. Dynnikov and B.~Wiest.
+\newblock On the complexity of braids.
+\newblock Paper available on line at {\tt http://hal.ccsd.cnrs.fr/}, 2004.
+
+\bibitem{FLP}
+A.~Fathi, F.~Laudenbach, and V.~Poenaru.
+\newblock {\em Travaux de Thurston sur les surfaces. Séminaire Orsay. 2nd ed.},
+  volume 66-67 of {\em Astérisque}.
+\newblock Centre National de la Recherche Scientifique, 1991.
+
+\bibitem{Katok}
+A.~Katok.
+\newblock Lyapunov exponents, entropy and periodic orbits for diffeomorphisms.
+\newblock {\em Publ. Math., Inst. Hautes Étud. Sci.}, 1980.
+
+\bibitem{KH}
+A.~Katok and B.~Hasselblatt.
+\newblock {\em Introduction to the modern theory of dynamical systems}.
+\newblock Cambridge University Press, 1995.
+
+\bibitem{Kolev}
+B.~Kolev.
+\newblock {Entropie topologique et représentation de Burau}.
+\newblock {\em C. R. Acad. Sci., Paris, Sér. I}, 309(13), 1989.
+
+\bibitem{NTL}
+V.~Shoup.
+\newblock Ntl: A library for doing number theory.
+\newblock The library is available at {\tt http://www.shoup.net}, 2001.
+
+\bibitem{Thurston}
+W.~Thurston.
+\newblock On the geometry and dynamics of diffeomorphisms of surfaces.
+\newblock {\em Bull. Am. Math. Soc., New Ser.}, 19(2):417--431, 1988.
+
+\end{thebibliography}
